@@ -1,0 +1,1546 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>《守株待兔》勸說農夫大挑戰</title>
+    <!-- 載入 Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- 載入圓潤易讀的繁體中文字體 -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@500;700;900&display=swap" rel="stylesheet">
+    
+    <style>
+        /* 溫暖繪本水墨宣紙質感背景 */
+        body {
+            font-family: 'Noto Sans TC', sans-serif;
+            background-color: #fdf8ec;
+            background-image: 
+                radial-gradient(#ebdcb9 1.8px, transparent 1.8px),
+                radial-gradient(#ebdcb9 1.8px, #fdf8ec 1.8px);
+            background-size: 36px 36px;
+            background-position: 0 0, 18px 18px;
+            color: #3b2e22;
+        }
+
+        /* 繪本卡片立體邊框 */
+        .storybook-card {
+            background: #fffdf7;
+            border: 4px solid #dfc89e;
+            box-shadow: 0 8px 0 #dfc89e, 0 14px 24px rgba(59, 46, 34, 0.12);
+        }
+
+        /* 對話氣泡尾巴 */
+        .bubble-farmer::before {
+            content: '';
+            position: absolute;
+            left: -13px;
+            top: 20px;
+            border-width: 11px 13px 11px 0;
+            border-style: solid;
+            border-color: transparent #f6ebd3 transparent transparent;
+        }
+
+        .bubble-student::after {
+            content: '';
+            position: absolute;
+            right: -13px;
+            top: 20px;
+            border-width: 11px 0 11px 13px;
+            border-style: solid;
+            border-color: transparent transparent transparent #dcf5d6;
+        }
+
+        /* 自訂捲軸 */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f5ecda;
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #c7b18c;
+            border-radius: 10px;
+        }
+
+        /* 飄浮白日夢動畫 */
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-7px); }
+        }
+        .animate-float {
+            animation: float 2.8s ease-in-out infinite;
+        }
+
+        /* 大圓形麥克風待機柔和跳動光暈 */
+        @keyframes mic-glow {
+            0%, 100% { transform: scale(1); box-shadow: 0 6px 0 #be123c, 0 0 0 0 rgba(244, 63, 94, 0.45); }
+            50% { transform: scale(1.05); box-shadow: 0 6px 0 #be123c, 0 0 0 14px rgba(244, 63, 94, 0); }
+        }
+        .mic-idle {
+            animation: mic-glow 2.2s infinite;
+        }
+
+        /* 麥克風錄音中聲波漣漪動畫 */
+        @keyframes mic-ripple {
+            0% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.85); }
+            70% { box-shadow: 0 0 0 26px rgba(239, 68, 68, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
+        }
+        .mic-recording {
+            animation: mic-ripple 1s infinite !important;
+            background: linear-gradient(135deg, #ef4444, #dc2626) !important;
+            border-color: #fecaca !important;
+        }
+
+        /* 聲波跳動條動畫 */
+        @keyframes wave-bar {
+            0%, 100% { height: 8px; }
+            50% { height: 24px; }
+        }
+        .wave-1 { animation: wave-bar 0.6s ease-in-out infinite 0.0s; }
+        .wave-2 { animation: wave-bar 0.6s ease-in-out infinite 0.15s; }
+        .wave-3 { animation: wave-bar 0.6s ease-in-out infinite 0.3s; }
+        .wave-4 { animation: wave-bar 0.6s ease-in-out infinite 0.1s; }
+
+        /* 獎狀金色邊框 */
+        .certificate-border {
+            border: 8px double #eab308;
+            background: linear-gradient(135deg, #fffef8 0%, #fef4d1 100%);
+        }
+
+        /* 彩帶飄落動畫 */
+        @keyframes confetti-fall {
+            0% { transform: translateY(-20px) rotate(0deg); opacity: 1; }
+            100% { transform: translateY(100vh) rotate(720deg); opacity: 0; }
+        }
+        .confetti-piece {
+            position: fixed;
+            top: -10px;
+            width: 12px;
+            height: 12px;
+            z-index: 60;
+            pointer-events: none;
+            animation: confetti-fall 3s linear forwards;
+        }
+
+        /* 扣分紅色震動閃爍動畫 */
+        @keyframes penalty-shake {
+            0%, 100% { transform: translateX(0); }
+            20%, 60% { transform: translateX(-6px); }
+            40%, 80% { transform: translateX(6px); }
+        }
+        .penalty-shake {
+            animation: penalty-shake 0.45s ease-in-out;
+            border-color: #ef4444 !important;
+            background-color: #fee2e2 !important;
+        }
+
+        /* 扣分徽章彈跳提示 */
+        @keyframes badge-pop {
+            0% { transform: scale(0.7) translateY(6px); opacity: 0; }
+            20% { transform: scale(1.08) translateY(0); opacity: 1; }
+            85% { transform: scale(1) translateY(0); opacity: 1; }
+            100% { transform: scale(0.95) translateY(-4px); opacity: 0; }
+        }
+        .penalty-badge-anim {
+            animation: badge-pop 3.2s ease-out forwards;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col justify-between p-2 sm:p-4">
+
+    <!-- 頂部導覽列：彩虹糖果風說服力能量條與功能按鈕 -->
+    <header class="max-w-6xl w-full mx-auto mb-3">
+        <div class="storybook-card rounded-3xl p-3 sm:p-4 flex flex-wrap items-center justify-between gap-3">
+            <!-- 標題區 -->
+            <div class="flex items-center gap-3">
+                <div class="w-12 h-12 sm:w-14 sm:h-14 rounded-2xl bg-amber-500 text-white flex items-center justify-center text-3xl shadow-md shrink-0 border-2 border-amber-200">
+                    🐰
+                </div>
+                <div>
+                    <h1 class="text-xl sm:text-2xl font-black text-amber-950 tracking-wide">
+                        《守株待兔》勸說農夫大挑戰
+                    </h1>
+                    <p class="text-base sm:text-lg text-amber-800 font-bold">
+                        一起勸說農夫回去耕田吧！
+                    </p>
+                </div>
+            </div>
+
+            <!-- 彩虹糖果風說服力能量條 (0% - 100%) -->
+            <div class="w-full sm:w-auto flex-1 max-w-md flex flex-col gap-1 relative">
+                <div class="flex justify-between items-center text-base sm:text-lg font-black">
+                    <span class="text-rose-600 flex items-center gap-1">
+                        <span>🌈⭐ 說服力能量條</span>
+                    </span>
+                    <div class="flex items-center gap-2">
+                        <span id="penalty-floating-badge" class="hidden px-2.5 py-0.5 rounded-full bg-red-600 text-white text-xs sm:text-sm font-black shadow-md">
+                            -15% 農夫更不想工作了！
+                        </span>
+                        <span id="progress-text" class="text-amber-900 text-xl font-black transition-colors">0%</span>
+                    </div>
+                </div>
+                <div id="progress-track" class="w-full h-7 bg-amber-100 rounded-full p-1 border-2 border-amber-300 overflow-hidden shadow-inner transition-colors">
+                    <div id="progress-bar" class="h-full bg-gradient-to-r from-rose-400 via-amber-400 via-emerald-400 to-sky-500 rounded-full transition-all duration-700 ease-out" style="width: 0%;"></div>
+                </div>
+            </div>
+
+            <!-- 頂部功能按鈕 -->
+            <div class="flex items-center gap-2 shrink-0">
+                <!-- 故事背景按鈕 -->
+                <button onclick="openStoryModal()" class="px-3.5 py-2.5 bg-amber-100 hover:bg-amber-200 text-amber-950 font-black rounded-2xl border-2 border-amber-400 transition transform active:scale-95 flex items-center gap-1.5 text-base sm:text-lg shadow-sm">
+                    <span class="text-xl">📖</span>
+                    <span>故事背景</span>
+                </button>
+                <!-- 語音開／關切換鍵 -->
+                <button id="tts-toggle-btn" onclick="toggleAutoTTS()" class="px-3.5 py-2.5 bg-sky-100 hover:bg-sky-200 text-sky-950 font-black rounded-2xl border-2 border-sky-400 transition transform active:scale-95 flex items-center gap-1.5 text-base sm:text-lg shadow-sm">
+                    <span id="tts-icon" class="text-xl">🔊</span>
+                    <span id="tts-label">語音開</span>
+                </button>
+                <!-- 重新開始按鈕 -->
+                <button onclick="resetGame()" class="px-3.5 py-2.5 bg-stone-100 hover:bg-stone-200 text-stone-700 font-black rounded-2xl border-2 border-stone-300 transition transform active:scale-95 flex items-center gap-1 text-base sm:text-lg shadow-sm">
+                    <span class="text-xl">🔄</span>
+                    <span>重玩</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- 主要互動區：左側四階段繪本 SVG 舞台 + 右側對話與語音輸入區 -->
+    <main class="max-w-6xl w-full mx-auto flex-1 grid grid-cols-1 lg:grid-cols-12 gap-4 items-stretch">
+        
+        <!-- 左側：四階段動態繪本 SVG 插畫舞台 (佔 5 欄) -->
+        <section class="lg:col-span-5 storybook-card rounded-3xl p-4 flex flex-col justify-between relative overflow-hidden">
+            <!-- 農夫狀態大標籤 -->
+            <div class="flex justify-center items-center mb-2 z-10">
+                <span id="mood-indicator" class="bg-amber-100 text-amber-950 px-4 py-1.5 rounded-full text-base sm:text-lg font-black shadow-sm border-2 border-amber-300">
+                    😎 農夫：得意微笑發白日夢
+                </span>
+            </div>
+
+            <!-- 四階段演變 SVG 繪本插畫 -->
+            <div class="w-full flex-1 flex items-center justify-center my-1">
+                <svg id="scene-svg" viewBox="0 0 400 340" class="w-full h-auto max-h-[330px] rounded-2xl border-2 border-amber-200 shadow-inner bg-[#f4efe1]">
+                    <defs>
+                        <linearGradient id="skyGrad" x1="0" y1="0" x2="0" y2="1">
+                            <stop offset="0%" stop-color="#cfe8ec" />
+                            <stop offset="100%" stop-color="#f9f4e3" />
+                        </linearGradient>
+                        <linearGradient id="mountainGrad" x1="0" y1="0" x2="0" y2="1">
+                            <stop offset="0%" stop-color="#8da69b" stop-opacity="0.65" />
+                            <stop offset="100%" stop-color="#d5ded8" stop-opacity="0.2" />
+                        </linearGradient>
+                        <linearGradient id="groundGrad" x1="0" y1="0" x2="0" y2="1">
+                            <stop offset="0%" stop-color="#d6bf96" />
+                            <stop offset="100%" stop-color="#b59767" />
+                        </linearGradient>
+                    </defs>
+
+                    <!-- 背景天空、太陽與白雲 -->
+                    <rect width="400" height="340" fill="url(#skyGrad)" />
+                    <circle cx="335" cy="52" r="24" fill="#fbbf24" opacity="0.85" />
+                    <g class="animate-float">
+                        <path d="M45,58 Q62,40 84,52 Q102,40 120,58 Z" fill="#ffffff" opacity="0.9" />
+                        <path d="M215,44 Q232,30 250,40 Q268,32 280,46 Z" fill="#ffffff" opacity="0.8" />
+                    </g>
+
+                    <!-- 遠山 -->
+                    <path d="M-10,185 Q70,110 160,175 Q240,120 330,170 Q370,145 410,185 L410,220 L-10,220 Z" fill="url(#mountainGrad)" />
+
+                    <!-- 地面 -->
+                    <path d="M0,190 Q200,180 400,190 L400,340 L0,340 Z" fill="url(#groundGrad)" />
+
+                    <!-- 農田區域 -->
+                    <g id="farm-field">
+                        <path d="M12,215 L155,205 L185,265 L8,280 Z" fill="#9c7c4e" stroke="#785c35" stroke-width="2" />
+                        
+                        <!-- 狀態 A (0%-99%)：荒廢雜草與掉落的鋤頭 -->
+                        <g id="weeds-group" class="transition-opacity duration-700">
+                            <path d="M35,235 Q30,215 22,210 M35,235 Q38,212 45,208 M35,235 Q45,220 52,218" stroke="#5b7a43" stroke-width="4" fill="none" stroke-linecap="round"/>
+                            <path d="M85,225 Q80,205 72,200 M85,225 Q88,202 95,198 M85,225 Q95,210 102,208" stroke="#688a4d" stroke-width="4" fill="none" stroke-linecap="round"/>
+                            <path d="M60,258 Q52,238 45,233 M60,258 Q62,235 70,231 M60,258 Q72,243 78,241" stroke="#4f6b39" stroke-width="4" fill="none" stroke-linecap="round"/>
+                            <path d="M128,248 Q121,228 113,223 M128,248 Q131,225 138,221" stroke="#5b7a43" stroke-width="4" fill="none" stroke-linecap="round"/>
+                            <!-- 丟在地上的鋤頭 -->
+                            <g id="fallen-hoe" transform="translate(26, 288) rotate(-10)">
+                                <rect x="0" y="0" width="80" height="6" rx="3" fill="#7c5330" />
+                                <path d="M72,-7 L80,-7 L82,13 L70,11 Z" fill="#6b7280" stroke="#374151" stroke-width="1.5"/>
+                            </g>
+                        </g>
+
+                        <!-- 狀態 B (100%)：長出綠油油禾苗與七彩小花 -->
+                        <g id="crops-group" style="opacity: 0;" class="transition-opacity duration-700">
+                            <line x1="25" y1="222" x2="148" y2="213" stroke="#6e532e" stroke-width="2" stroke-dasharray="4 3"/>
+                            <line x1="20" y1="242" x2="158" y2="232" stroke="#6e532e" stroke-width="2" stroke-dasharray="4 3"/>
+                            <line x1="15" y1="262" x2="168" y2="252" stroke="#6e532e" stroke-width="2" stroke-dasharray="4 3"/>
+                            <!-- 綠油油禾苗 -->
+                            <g fill="#3da329">
+                                <path d="M40,220 Q34,206 26,208 Q35,213 40,220 Q45,206 54,208 Q45,213 40,220 Z"/>
+                                <path d="M78,217 Q72,203 64,205 Q73,210 78,217 Q83,203 92,205 Q83,210 78,217 Z"/>
+                                <path d="M115,214 Q109,200 101,202 Q110,207 115,214 Q120,200 129,202 Q120,207 115,214 Z"/>
+                                <path d="M35,240 Q29,226 21,228 Q30,233 35,240 Q40,226 49,228 Q40,233 35,240 Z"/>
+                                <path d="M75,237 Q69,223 61,225 Q70,230 75,237 Q80,223 89,225 Q80,230 75,237 Z"/>
+                                <path d="M115,234 Q109,220 101,222 Q110,227 115,234 Q120,220 129,222 Q120,227 115,234 Z"/>
+                                <path d="M30,260 Q24,246 16,248 Q25,253 30,260 Q35,246 44,248 Q35,253 30,260 Z"/>
+                                <path d="M72,257 Q66,243 58,245 Q67,250 72,257 Q77,243 86,245 Q77,250 72,257 Z"/>
+                                <path d="M118,254 Q112,240 104,242 Q113,247 118,254 Q123,240 132,242 Q123,247 118,254 Z"/>
+                            </g>
+                            <!-- 小花朵點綴 -->
+                            <g>
+                                <circle cx="22" cy="292" r="5" fill="#f43f5e"/>
+                                <circle cx="22" cy="292" r="2" fill="#fde047"/>
+                                <circle cx="55" cy="298" r="5" fill="#f97316"/>
+                                <circle cx="55" cy="298" r="2" fill="#ffffff"/>
+                                <circle cx="95" cy="292" r="5" fill="#ec4899"/>
+                                <circle cx="95" cy="292" r="2" fill="#fde047"/>
+                                <circle cx="135" cy="288" r="5" fill="#eab308"/>
+                                <circle cx="135" cy="288" r="2" fill="#ffffff"/>
+                            </g>
+                        </g>
+                    </g>
+
+                    <!-- 大樹樁 -->
+                    <g id="tree-stump" transform="translate(278, 222)">
+                        <ellipse cx="35" cy="74" rx="48" ry="12" fill="#8c7047" opacity="0.5" />
+                        <path d="M10,72 Q12,35 8,15 L62,15 Q58,35 65,72 Q45,78 35,72 Q20,78 10,72 Z" fill="#7a5230" stroke="#4a3018" stroke-width="2.5"/>
+                        <path d="M22,25 L22,64 M35,28 L35,66 M48,24 L48,62" stroke="#593a1e" stroke-width="2" stroke-linecap="round"/>
+                        <ellipse cx="35" cy="15" rx="27" ry="9" fill="#d9b382" stroke="#4a3018" stroke-width="2.5"/>
+                        <ellipse cx="35" cy="15" rx="18" ry="5.5" fill="none" stroke="#9c7244" stroke-width="1.5"/>
+                        <ellipse cx="35" cy="15" rx="9" ry="2.5" fill="none" stroke="#9c7244" stroke-width="1.5"/>
+
+                        <!-- 蜘蛛網 (60%-99% 開始動搖時出現，象徵等太久荒廢) -->
+                        <g id="spider-web" style="display: none;">
+                            <path d="M58,18 L92,12 M58,28 L94,35 M58,38 L86,56 M62,15 L66,54" stroke="#ffffff" stroke-width="1.5" opacity="0.9"/>
+                            <path d="M68,16 Q72,26 67,38 M78,14 Q84,28 77,46 M88,13 Q93,28 84,54" fill="none" stroke="#ffffff" stroke-width="1.3" opacity="0.85"/>
+                            <!-- 小蜘蛛 -->
+                            <line x1="82" y1="36" x2="82" y2="52" stroke="#ffffff" stroke-width="1.2"/>
+                            <circle cx="82" cy="54" r="3.5" fill="#374151"/>
+                        </g>
+                    </g>
+
+                    <!-- 農夫角色 -->
+                    <g id="farmer-character" transform="translate(175, 130)" class="transition-transform duration-500">
+                        <!-- 身體與農夫衫 -->
+                        <path d="M25,95 Q55,88 85,95 L95,165 L15,165 Z" fill="#4b6b88" stroke="#243748" stroke-width="2.5"/>
+                        <path d="M42,93 L55,115 L68,93" fill="none" stroke="#f0e7d8" stroke-width="4" stroke-linecap="round"/>
+                        <rect x="20" y="132" width="70" height="10" rx="3" fill="#8c583a" stroke="#4a2c18" stroke-width="2"/>
+                        
+                        <!-- 翹腳坐姿 (0%-59% 顯示) -->
+                        <g id="legs-crossed">
+                            <path d="M45,162 Q82,155 96,168" fill="none" stroke="#2f4354" stroke-width="11" stroke-linecap="round"/>
+                            <ellipse cx="98" cy="168" rx="9" ry="5" fill="#6b4423" stroke="#3b2310" stroke-width="2"/>
+                        </g>
+
+                        <!-- 站立雙腳 (60%-100% 顯示) -->
+                        <g id="legs-standing" style="display: none;">
+                            <rect x="34" y="160" width="14" height="20" rx="4" fill="#2f4354"/>
+                            <rect x="62" y="160" width="14" height="20" rx="4" fill="#2f4354"/>
+                            <ellipse cx="40" cy="180" rx="10" ry="5" fill="#6b4423" stroke="#3b2310" stroke-width="2"/>
+                            <ellipse cx="70" cy="180" rx="10" ry="5" fill="#6b4423" stroke="#3b2310" stroke-width="2"/>
+                        </g>
+
+                        <!-- 頭部與草帽 -->
+                        <circle cx="55" cy="65" r="28" fill="#f5c9a3" stroke="#5c3d28" stroke-width="2.5"/>
+                        <path d="M5,52 Q55,10 105,52 Q55,62 5,52 Z" fill="#eab95c" stroke="#7d5d23" stroke-width="2.5"/>
+                        <path d="M28,42 Q55,35 82,42" fill="none" stroke="#b58938" stroke-width="2"/>
+
+                        <!-- 表情 1 (0%-29%)：固執偷懶、得意微笑 -->
+                        <g id="face-stubborn">
+                            <path d="M36,55 Q44,49 50,55" fill="none" stroke="#3d2616" stroke-width="2.5" stroke-linecap="round"/>
+                            <path d="M60,55 Q66,49 74,55" fill="none" stroke="#3d2616" stroke-width="2.5" stroke-linecap="round"/>
+                            <path d="M38,64 Q44,58 50,64" fill="none" stroke="#3d2616" stroke-width="2.5" stroke-linecap="round"/>
+                            <path d="M60,64 Q66,58 72,64" fill="none" stroke="#3d2616" stroke-width="2.5" stroke-linecap="round"/>
+                            <ellipse cx="36" cy="72" rx="5" ry="3" fill="#f08065" opacity="0.65"/>
+                            <ellipse cx="74" cy="72" rx="5" ry="3" fill="#f08065" opacity="0.65"/>
+                            <path d="M45,75 Q55,87 65,75 Z" fill="#d14949" stroke="#3d2616" stroke-width="2"/>
+                        </g>
+
+                        <!-- 表情 2 (30%-59%)：半信半疑、皺眉猶豫 -->
+                        <g id="face-thinking" style="display: none;">
+                            <path d="M35,53 L49,57" fill="none" stroke="#3d2616" stroke-width="2.5" stroke-linecap="round"/>
+                            <path d="M75,53 L61,57" fill="none" stroke="#3d2616" stroke-width="2.5" stroke-linecap="round"/>
+                            <circle cx="43" cy="64" r="3.2" fill="#3d2616"/>
+                            <circle cx="67" cy="64" r="3.2" fill="#3d2616"/>
+                            <path d="M46,78 Q51,74 55,78 Q59,82 64,78" fill="none" stroke="#3d2616" stroke-width="2.5" stroke-linecap="round"/>
+                        </g>
+
+                        <!-- 表情 3 (60%-99%)：開始動搖、張大嘴巴驚訝望向荒田 -->
+                        <g id="face-surprised" style="display: none;">
+                            <path d="M35,50 Q42,44 49,50" fill="none" stroke="#3d2616" stroke-width="2.5" stroke-linecap="round"/>
+                            <path d="M61,50 Q68,44 75,50" fill="none" stroke="#3d2616" stroke-width="2.5" stroke-linecap="round"/>
+                            <circle cx="40" cy="63" r="4" fill="#3d2616"/>
+                            <circle cx="64" cy="63" r="4" fill="#3d2616"/>
+                            <circle cx="39" cy="62" r="1.2" fill="#ffffff"/>
+                            <circle cx="63" cy="62" r="1.2" fill="#ffffff"/>
+                            <ellipse cx="52" cy="78" rx="6" ry="7" fill="#d14949" stroke="#3d2616" stroke-width="2"/>
+                            <!-- 驚訝冷汗滴 -->
+                            <path d="M84,56 Q88,63 84,66 Q80,63 84,56 Z" fill="#38bdf8"/>
+                        </g>
+
+                        <!-- 表情 4 (100%)：徹底醒悟、露出開朗笑容 -->
+                        <g id="face-convinced" style="display: none;">
+                            <path d="M36,53 Q43,48 50,53" fill="none" stroke="#3d2616" stroke-width="2.5" stroke-linecap="round"/>
+                            <path d="M60,53 Q67,48 74,53" fill="none" stroke="#3d2616" stroke-width="2.5" stroke-linecap="round"/>
+                            <circle cx="43" cy="63" r="3.5" fill="#3d2616"/>
+                            <circle cx="67" cy="63" r="3.5" fill="#3d2616"/>
+                            <circle cx="44" cy="62" r="1.2" fill="#ffffff"/>
+                            <circle cx="68" cy="62" r="1.2" fill="#ffffff"/>
+                            <ellipse cx="35" cy="71" rx="5" ry="3" fill="#f08065" opacity="0.6"/>
+                            <ellipse cx="75" cy="71" rx="5" ry="3" fill="#f08065" opacity="0.6"/>
+                            <path d="M44,74 Q55,87 66,74 Z" fill="#d14949" stroke="#3d2616" stroke-width="2"/>
+                        </g>
+
+                        <!-- 手臂 A (0%-29%)：抱臂靠在樹樁旁休息 -->
+                        <g id="arms-hugging">
+                            <path d="M26,105 Q55,118 84,105" fill="none" stroke="#5c3d28" stroke-width="9" stroke-linecap="round"/>
+                            <path d="M26,105 Q55,118 84,105" fill="none" stroke="#f5c9a3" stroke-width="5" stroke-linecap="round"/>
+                            <path d="M82,102 Q115,105 112,125 Q100,132 82,122" fill="#f5c9a3" stroke="#5c3d28" stroke-width="2.5" stroke-linecap="round"/>
+                        </g>
+
+                        <!-- 手臂 B (30%-59%)：皺眉抓頭思考 -->
+                        <g id="arms-scratching" style="display: none;">
+                            <path d="M25,105 Q15,130 40,130" fill="none" stroke="#5c3d28" stroke-width="2.5" stroke-linecap="round"/>
+                            <path d="M82,102 Q102,75 82,54" fill="none" stroke="#f5c9a3" stroke-width="8" stroke-linecap="round"/>
+                            <path d="M82,102 Q102,75 82,54" fill="none" stroke="#5c3d28" stroke-width="2.5" stroke-linecap="round"/>
+                        </g>
+
+                        <!-- 手臂 C (60%-99%)：驚訝舉手望向荒田 -->
+                        <g id="arms-surprised" style="display: none;">
+                            <path d="M25,102 Q5,85 18,72" fill="none" stroke="#f5c9a3" stroke-width="8" stroke-linecap="round"/>
+                            <path d="M25,102 Q5,85 18,72" fill="none" stroke="#5c3d28" stroke-width="2.5" stroke-linecap="round"/>
+                            <path d="M85,102 Q102,120 82,130" fill="none" stroke="#5c3d28" stroke-width="2.5" stroke-linecap="round"/>
+                        </g>
+
+                        <!-- 手臂 D (100%)：重新拿起鋤頭耕田 -->
+                        <g id="arms-farming" style="display: none;">
+                            <g transform="translate(2, 62) rotate(-25)">
+                                <rect x="0" y="35" width="114" height="6" rx="3" fill="#7c5330" stroke="#3d2616" stroke-width="1.5"/>
+                                <path d="M8,22 L22,22 L25,52 L5,50 Z" fill="#6b7280" stroke="#1f2937" stroke-width="2"/>
+                            </g>
+                            <circle cx="32" cy="118" r="6" fill="#f5c9a3" stroke="#5c3d28" stroke-width="2"/>
+                            <circle cx="58" cy="108" r="6" fill="#f5c9a3" stroke="#5c3d28" stroke-width="2"/>
+                        </g>
+                    </g>
+                    <!-- 白日夢氣泡 (0%-29% 顯示「兔子快來」，30%-59% 縮小並出現問號，扣分時放大並冒愛心) -->
+                    <g id="rabbit-daydream" class="animate-float transition-all duration-500">
+                        <ellipse cx="335" cy="122" rx="44" ry="31" fill="#ffffff" stroke="#c4b090" stroke-width="2.5" stroke-dasharray="5 3"/>
+                        <circle cx="290" cy="146" r="5" fill="#ffffff" stroke="#c4b090" stroke-width="1.5"/>
+                        <circle cx="278" cy="156" r="3" fill="#ffffff" stroke="#c4b090" stroke-width="1.5"/>
+                        <g transform="translate(316, 102)">
+                            <ellipse cx="10" cy="8" rx="3.5" ry="10" transform="rotate(-15 10 8)" fill="#f3f4f6" stroke="#6b7280" stroke-width="1.5"/>
+                            <ellipse cx="22" cy="8" rx="3.5" ry="10" transform="rotate(15 22 8)" fill="#f3f4f6" stroke="#6b7280" stroke-width="1.5"/>
+                            <circle cx="16" cy="22" r="11" fill="#ffffff" stroke="#6b7280" stroke-width="1.5"/>
+                            <circle cx="12" cy="20" r="1.5" fill="#ef4444"/>
+                            <circle cx="20" cy="20" r="1.5" fill="#ef4444"/>
+                            <path d="M14,25 Q16,27 18,25" fill="none" stroke="#6b7280" stroke-width="1.5"/>
+                            <text id="daydream-text" x="28" y="16" font-size="11" fill="#d97706" font-weight="bold">兔子快來</text>
+                            <text id="daydream-question" x="30" y="34" font-size="18" fill="#ef4444" font-weight="900" style="display: none;">❓</text>
+                            <text id="daydream-heart" x="31" y="34" font-size="16" fill="#f43f5e" font-weight="900" style="display: none;">💕</text>
+                        </g>
+                    </g>
+                </svg>
+            </div>
+
+            <!-- 底部三個勸說重點亮點卡片 -->
+            <div class="bg-amber-50 border-2 border-amber-200 rounded-2xl p-2.5 mt-2">
+                <div class="text-base font-black text-amber-950 mb-1.5 text-center">
+                    🎯 試試對農夫說這三個道理：
+                </div>
+                <div class="grid grid-cols-3 gap-2 text-center text-sm sm:text-base font-black">
+                    <div id="keypoint-1" class="py-2 px-1 rounded-xl bg-white border-2 border-amber-300 text-stone-500 transition-all">
+                        🐰 撞樹只是運氣
+                    </div>
+                    <div id="keypoint-2" class="py-2 px-1 rounded-xl bg-white border-2 border-amber-300 text-stone-500 transition-all">
+                        🌾 不耕田沒糧食
+                    </div>
+                    <div id="keypoint-3" class="py-2 px-1 rounded-xl bg-white border-2 border-amber-300 text-stone-500 transition-all">
+                        💪 努力才有收穫
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 右側：書面語對話舞台與大圓形麥克風區 (佔 7 欄) -->
+        <section class="lg:col-span-7 storybook-card rounded-3xl p-4 flex flex-col justify-between h-[610px] sm:h-[650px]">
+            
+            <!-- 對話紀錄捲動區 -->
+            <div id="chat-container" class="flex-1 overflow-y-auto pr-2 space-y-4 mb-3">
+                <!-- 農夫規範書面語開場白 -->
+                <div class="flex items-start gap-3">
+                    <div class="w-12 h-12 sm:w-14 sm:h-14 rounded-full bg-amber-600 text-white flex items-center justify-center font-black shrink-0 shadow border-2 border-amber-200 text-2xl sm:text-3xl">
+                        👨‍🌾
+                    </div>
+                    <div class="flex flex-col max-w-[85%]">
+                        <div class="flex items-center gap-2 mb-1 ml-1">
+                            <span class="text-base font-black text-amber-900">農夫叔叔</span>
+                            <button type="button" onclick="speakText('昨天有隻兔子撞死在樹樁上，我天天在這裡等兔子多輕鬆呀！')" class="px-3 py-1 bg-amber-200 hover:bg-amber-300 text-amber-950 rounded-full text-sm font-black flex items-center gap-1 shadow-sm transition active:scale-95">
+                                <span>再聽一次 🔊</span>
+                            </button>
+                        </div>
+                        <div class="relative bg-[#f6ebd3] border-2 border-[#d9c8a9] text-stone-800 p-4 rounded-2xl rounded-tl-none shadow-sm bubble-farmer text-xl sm:text-2xl font-bold leading-relaxed">
+                            昨天有隻兔子撞死在樹樁上，我天天在這裡等兔子多輕鬆呀！
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 底部操作區：錄音預覽 + 大圓形麥克風按鈕 + 勸說小提示按鈕 + 隱藏式打字框 -->
+            <div class="border-t-2 border-amber-200 pt-3 flex flex-col gap-2.5">
+                
+                <!-- 錄音即時辨識預覽條（錄音時出現） -->
+                <div id="live-transcript-box" class="hidden bg-rose-50 border-2 border-rose-300 rounded-2xl px-4 py-2 text-rose-900 font-black text-lg flex items-center justify-between gap-2">
+                    <div class="flex items-center gap-2 overflow-hidden">
+                        <span class="text-xl shrink-0">🗣️</span>
+                        <span id="live-transcript-text" class="truncate">請大聲說出你想勸說農夫的話……</span>
+                    </div>
+                    <!-- 聲波跳動動畫 -->
+                    <div class="flex items-center gap-1 h-6 shrink-0">
+                        <span class="w-1.5 bg-rose-500 rounded-full wave-1"></span>
+                        <span class="w-1.5 bg-rose-500 rounded-full wave-2"></span>
+                        <span class="w-1.5 bg-rose-500 rounded-full wave-3"></span>
+                        <span class="w-1.5 bg-rose-500 rounded-full wave-4"></span>
+                    </div>
+                </div>
+
+                <!-- 底部核心互動控制列：左側「勸說小提示 💡」 + 中央「大圓形麥克風按鈕」 + 右側「鍵盤輸入」切換 -->
+                <div class="flex items-center justify-around gap-2 py-1">
+                    <!-- 左側：勸說小提示 💡 按鈕 -->
+                    <button 
+                        type="button" 
+                        onclick="openHintModal()"
+                        class="px-4 py-3 bg-amber-100 hover:bg-amber-200 active:scale-95 text-amber-950 font-black rounded-2xl border-2 border-amber-400 transition shadow-sm flex flex-col items-center justify-center gap-0.5 text-base sm:text-lg shrink-0"
+                    >
+                        <span class="text-2xl">💡</span>
+                        <span>勸說小提示</span>
+                    </button>
+
+                    <!-- 中央：醒目大圓形麥克風按鈕 -->
+                    <div class="flex flex-col items-center">
+                        <button 
+                            type="button" 
+                            id="mic-btn" 
+                            onclick="toggleSpeechRecognition()"
+                            class="mic-idle w-24 h-24 sm:w-28 sm:h-28 rounded-full bg-gradient-to-br from-rose-500 to-pink-600 hover:from-rose-600 hover:to-pink-700 text-white font-black border-4 border-rose-200 transition transform active:scale-95 flex flex-col items-center justify-center shadow-lg"
+                        >
+                            <span id="mic-icon" class="text-3xl sm:text-4xl mb-0.5">🎤</span>
+                            <span id="mic-text" class="text-xs sm:text-sm leading-tight px-1 text-center">按一下說話</span>
+                        </button>
+                    </div>
+
+                    <!-- 右側：顯示／隱藏打字輸入框按鈕 -->
+                    <button 
+                        type="button" 
+                        onclick="toggleKeyboardInput()"
+                        class="px-4 py-3 bg-stone-100 hover:bg-stone-200 active:scale-95 text-stone-700 font-black rounded-2xl border-2 border-stone-300 transition shadow-sm flex flex-col items-center justify-center gap-0.5 text-base sm:text-lg shrink-0"
+                    >
+                        <span class="text-2xl">⌨️</span>
+                        <span>打字輸入</span>
+                    </button>
+                </div>
+
+                <!-- 隱藏式文字輸入框（點擊「打字輸入」或麥克風不支援時展開） -->
+                <form id="chat-form" onsubmit="handleSendMessage(event)" class="hidden gap-2 pt-1">
+                    <input 
+                        type="text" 
+                        id="user-input" 
+                        placeholder="請在這裡輸入勸說農夫的句子……" 
+                        autocomplete="off"
+                        class="flex-1 bg-white border-2 border-amber-300 focus:border-amber-600 focus:outline-none rounded-2xl px-4 py-2.5 text-lg font-bold text-stone-800 placeholder-stone-400 shadow-inner"
+                    >
+                    <button 
+                        type="submit" 
+                        id="send-btn"
+                        class="bg-amber-600 hover:bg-amber-700 disabled:bg-stone-400 text-white font-black px-5 py-2.5 rounded-2xl shadow-md transition transform active:scale-95 flex items-center gap-1 shrink-0 text-lg"
+                    >
+                        <span>送出 🚀</span>
+                    </button>
+                </form>
+            </div>
+        </section>
+    </main>
+
+    <!-- 彈窗 1：故事背景（三張圖卡 + 極簡標準書面語短句 + 一鍵語音朗讀） -->
+    <div id="story-modal" class="fixed inset-0 bg-stone-900/60 backdrop-blur-sm z-50 hidden items-center justify-center p-4">
+        <div class="storybook-card rounded-3xl max-w-lg w-full p-6 relative max-h-[92vh] overflow-y-auto">
+            <button onclick="closeStoryModal()" class="absolute top-4 right-4 w-11 h-11 rounded-full bg-amber-100 hover:bg-amber-200 text-amber-950 font-black text-xl flex items-center justify-center border-2 border-amber-300">
+                ✕
+            </button>
+            
+            <div class="flex items-center gap-2 mb-4">
+                <span class="text-3xl">📖</span>
+                <h2 class="text-2xl sm:text-3xl font-black text-amber-950">《守株待兔》故事背景</h2>
+            </div>
+
+            <!-- 三張圖卡 -->
+            <div class="grid grid-cols-3 gap-2.5 mb-4 text-center">
+                <div class="bg-amber-50 border-2 border-amber-300 rounded-2xl p-3 shadow-sm">
+                    <div class="text-4xl mb-1.5">🐇💥🌳</div>
+                    <div class="text-base font-black text-amber-950">1. 兔子撞樹</div>
+                </div>
+                <div class="bg-amber-50 border-2 border-amber-300 rounded-2xl p-3 shadow-sm">
+                    <div class="text-4xl mb-1.5">👨‍🌾🫳🪓</div>
+                    <div class="text-base font-black text-amber-950">2. 放下鋤頭</div>
+                </div>
+                <div class="bg-amber-50 border-2 border-amber-300 rounded-2xl p-3 shadow-sm">
+                    <div class="text-4xl mb-1.5">💤🌳🌾</div>
+                    <div class="text-base font-black text-amber-950">3. 守著樹樁</div>
+                </div>
+            </div>
+
+            <!-- 極簡書面語短句說明 -->
+            <div class="bg-amber-50 border-2 border-amber-200 rounded-2xl p-4 text-xl font-bold leading-relaxed text-amber-950 space-y-2.5">
+                <p>1️⃣ 農夫看到一隻兔子撞死在樹樁上。</p>
+                <p>2️⃣ 他放下鋤頭，不再辛苦耕田。</p>
+                <p>3️⃣ 他天天守著樹樁，等待兔子自己撞上來。</p>
+            </div>
+
+            <div class="mt-5 flex flex-col sm:flex-row gap-3 justify-center">
+                <button onclick="speakText('農夫看到一隻兔子撞死在樹樁上。他放下鋤頭，不再辛苦耕田。他天天守著樹樁，等待兔子自己撞上來。快來勸說他吧！')" class="px-6 py-3.5 bg-sky-500 hover:bg-sky-600 text-white font-black rounded-2xl shadow-md transition flex items-center justify-center gap-2 text-lg sm:text-xl">
+                    <span>🔊 朗讀故事</span>
+                </button>
+                <button onclick="closeStoryModal()" class="px-6 py-3.5 bg-amber-600 hover:bg-amber-700 text-white font-black rounded-2xl shadow-md transition text-lg sm:text-xl">
+                    開始勸說農夫！🚀
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 彈窗 2：勸說小提示 💡（點擊彈出 3 個簡單書面語勸說句子卡片） -->
+    <div id="hint-modal" class="fixed inset-0 bg-stone-900/60 backdrop-blur-sm z-50 hidden items-center justify-center p-4">
+        <div class="storybook-card rounded-3xl max-w-lg w-full p-6 relative max-h-[92vh] overflow-y-auto">
+            <button onclick="closeHintModal()" class="absolute top-4 right-4 w-11 h-11 rounded-full bg-amber-100 hover:bg-amber-200 text-amber-950 font-black text-xl flex items-center justify-center border-2 border-amber-300">
+                ✕
+            </button>
+            
+            <div class="flex items-center gap-2 mb-2">
+                <span class="text-3xl">💡</span>
+                <h2 class="text-2xl sm:text-3xl font-black text-amber-950">勸說小提示</h2>
+            </div>
+            <p class="text-lg font-bold text-amber-800 mb-4">
+                點一下下面的句子卡片，立刻幫你說給農夫聽！
+            </p>
+
+            <!-- 3 個簡單書面語勸說句子卡片 -->
+            <div class="space-y-3">
+                <button type="button" onclick="selectHintCard('兔子撞樹只是運氣好，不會天天發生！')" class="w-full text-left bg-amber-50 hover:bg-amber-100 active:scale-98 border-3 border-amber-400 rounded-2xl p-4 shadow-sm transition flex items-center gap-3">
+                    <span class="text-3xl shrink-0">🐰</span>
+                    <span class="text-xl font-black text-amber-950 leading-snug">兔子撞樹只是運氣好，不會天天發生！</span>
+                </button>
+
+                <button type="button" onclick="selectHintCard('田地長滿野草，不耕種就沒有飯吃！')" class="w-full text-left bg-orange-50 hover:bg-orange-100 active:scale-98 border-3 border-orange-400 rounded-2xl p-4 shadow-sm transition flex items-center gap-3">
+                    <span class="text-3xl shrink-0">🌾</span>
+                    <span class="text-xl font-black text-orange-950 leading-snug">田地長滿野草，不耕種就沒有飯吃！</span>
+                </button>
+
+                <button type="button" onclick="selectHintCard('只有努力耕作，才會有真正的收穫！')" class="w-full text-left bg-emerald-50 hover:bg-emerald-100 active:scale-98 border-3 border-emerald-400 rounded-2xl p-4 shadow-sm transition flex items-center gap-3">
+                    <span class="text-3xl shrink-0">💪</span>
+                    <span class="text-xl font-black text-emerald-950 leading-snug">只有努力耕作，才會有真正的收穫！</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 彈窗 3：通關獎勵「小小勸說家獎狀」與成語總結 -->
+    <div id="victory-modal" class="fixed inset-0 bg-stone-900/70 backdrop-blur-sm z-50 hidden items-center justify-center p-3 sm:p-4">
+        <div class="bg-[#fffdf8] border-4 border-amber-500 rounded-3xl max-w-xl w-full p-5 sm:p-6 relative max-h-[94vh] overflow-y-auto shadow-2xl text-center">
+            
+            <div class="inline-block px-4 py-1.5 bg-emerald-100 text-emerald-800 font-black rounded-full text-lg border-2 border-emerald-300 mb-2">
+                🎉 勸說大成功！
+            </div>
+            <h2 class="text-2xl sm:text-3xl font-black text-amber-950 mb-4">
+                農夫拿起鋤頭回去耕田了！
+            </h2>
+
+            <!-- 小小勸說家獎狀 -->
+            <div class="certificate-border rounded-3xl p-5 mb-4 shadow-md relative">
+                <div class="text-6xl mb-2 animate-bounce">🏆</div>
+                <h3 class="text-2xl sm:text-3xl font-black text-amber-900 mb-3">
+                    小小勸說家獎狀
+                </h3>
+                
+                <!-- 名字輸入或語音說出名字 -->
+                <div class="flex flex-wrap items-center justify-center gap-2 mb-3 text-xl font-black text-stone-800">
+                    <span>頒發給：</span>
+                    <input 
+                        type="text" 
+                        id="student-name-input" 
+                        value="聰明小朋友" 
+                        maxlength="10"
+                        class="border-b-4 border-amber-500 bg-white px-2 py-0.5 text-center font-black text-amber-900 focus:outline-none rounded w-36"
+                        title="點擊輸入你的名字"
+                    >
+                    <button type="button" onclick="recordStudentName()" id="name-mic-btn" class="px-3 py-1 bg-rose-100 hover:bg-rose-200 text-rose-800 rounded-full text-sm font-black border border-rose-300 flex items-center gap-1 transition active:scale-95" title="用麥克風說出你的名字">
+                        <span>🎤 說出名字</span>
+                    </button>
+                </div>
+
+                <!-- 兩句簡單書面語總結成語寓意 -->
+                <div class="bg-white/95 border-2 border-amber-300 rounded-2xl p-4 text-left text-lg sm:text-xl font-bold text-stone-800 space-y-1.5 mb-3">
+                    <div class="text-amber-900 font-black">💡 《守株待兔》成語寓意：</div>
+                    <p>做事不能只想著不勞而獲，要靠自己努力才會有收穫。</p>
+                </div>
+
+                <div class="text-base text-amber-800 font-black" id="cert-date"></div>
+            </div>
+
+            <!-- 底部大按鈕 -->
+            <div class="flex flex-col sm:flex-row gap-3 justify-center">
+                <button onclick="speakText('太棒了！你成功勸說農夫回去努力耕田，獲得小小勸說家獎狀！記住，做事不能只想著不勞而獲，要靠自己努力才會有收穫。')" class="px-6 py-3.5 bg-sky-500 hover:bg-sky-600 text-white font-black rounded-2xl shadow-md transition flex items-center justify-center gap-2 text-lg sm:text-xl">
+                    <span>🔊 朗讀獎狀</span>
+                </button>
+                <button onclick="resetGame()" class="px-8 py-3.5 bg-amber-600 hover:bg-amber-700 text-white font-black rounded-2xl shadow-md transition flex items-center justify-center gap-2 text-lg sm:text-xl">
+                    <span>🔄 再玩一次</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 自訂大字提示訊息框 -->
+    <div id="toast-box" class="fixed bottom-32 left-1/2 transform -translate-x-1/2 bg-stone-800/95 text-white px-5 py-3 rounded-2xl text-lg font-black shadow-xl opacity-0 pointer-events-none transition-opacity duration-300 z-50 text-center max-w-xs sm:max-w-md">
+        提示訊息
+    </div>
+
+    <script>
+        // ==========================================
+        // 1. 遊戲狀態與語音系統變數
+        // ==========================================
+        let persuasionScore = 0; // 說服力進度 (0 - 100)
+        let isProcessing = false; // 是否正在等待回覆
+        let autoTTSEnabled = true; // 預設開啟自動語音朗讀
+        let isRecording = false; // 是否正在錄音中
+        let recognition = null; // 語音辨識物件
+
+        let unlockedKeypoints = {
+            chance: false,
+            consequence: false,
+            effort: false
+        };
+        let conversationHistory = [];
+
+        // ==========================================
+        // 2. 初始化語音朗讀 (TTS) 與語音辨識 (STT)
+        // ==========================================
+        window.onload = function() {
+            const today = new Date();
+            document.getElementById('cert-date').textContent = `${today.getFullYear()} 年 ${today.getMonth() + 1} 月 ${today.getDate()} 日`;
+            updateSceneVisuals(0, 'stubborn');
+            initSpeechRecognition();
+            
+            // 預載系統語音清單，優先選取 zh-HK 粵語語音或中文語音
+            if ('speechSynthesis' in window) {
+                window.speechSynthesis.getVoices();
+                window.speechSynthesis.onvoiceschanged = () => {
+                    window.speechSynthesis.getVoices();
+                };
+            }
+        };
+
+        // 語音朗讀功能（優先選取 zh-HK 粵語語音或中文語音，語速 0.92）
+        function speakText(text) {
+            if (!('speechSynthesis' in window)) return;
+            window.speechSynthesis.cancel();
+
+            const utterance = new SpeechSynthesisUtterance(text);
+            const voices = window.speechSynthesis.getVoices();
+            
+            const preferredVoice = voices.find(v => v.lang.toLowerCase() === 'zh-hk') ||
+                                   voices.find(v => v.lang.toLowerCase().includes('hk')) ||
+                                   voices.find(v => v.name.includes('Cantonese') || v.name.includes('Sin-Ji') || v.name.includes('WanLung') || v.name.includes('HiuGaai')) ||
+                                   voices.find(v => v.lang.toLowerCase().includes('zh'));
+
+            if (preferredVoice) {
+                utterance.voice = preferredVoice;
+                utterance.lang = preferredVoice.lang;
+            } else {
+                utterance.lang = 'zh-HK';
+            }
+            utterance.rate = 0.92;  // 親切清晰稍慢語速
+            utterance.pitch = 1.05; // 親切生動語調
+            window.speechSynthesis.speak(utterance);
+        }
+
+        // 切換「語音開／關」
+        function toggleAutoTTS() {
+            autoTTSEnabled = !autoTTSEnabled;
+            const iconEl = document.getElementById('tts-icon');
+            const labelEl = document.getElementById('tts-label');
+            const btnEl = document.getElementById('tts-toggle-btn');
+
+            if (autoTTSEnabled) {
+                iconEl.textContent = '🔊';
+                labelEl.textContent = '語音開';
+                btnEl.className = 'px-3.5 py-2.5 bg-sky-100 hover:bg-sky-200 text-sky-950 font-black rounded-2xl border-2 border-sky-400 transition transform active:scale-95 flex items-center gap-1.5 text-base sm:text-lg shadow-sm';
+                showToast('🔊 已開啟自動語音朗讀');
+            } else {
+                window.speechSynthesis.cancel();
+                iconEl.textContent = '🔇';
+                labelEl.textContent = '語音關';
+                btnEl.className = 'px-3.5 py-2.5 bg-stone-200 hover:bg-stone-300 text-stone-600 font-black rounded-2xl border-2 border-stone-400 transition transform active:scale-95 flex items-center gap-1.5 text-base sm:text-lg shadow-sm';
+                showToast('🔇 已關閉自動語音朗讀');
+            }
+        }
+
+        // 初始化語音輸入辨識 (lang = 'zh-HK')
+        function initSpeechRecognition() {
+            const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+            if (!SpeechRecognition) {
+                // 若不支援語音辨識，自動展開輸入框並提示
+                const chatForm = document.getElementById('chat-form');
+                chatForm.classList.remove('hidden');
+                chatForm.classList.add('flex');
+                const micBtn = document.getElementById('mic-btn');
+                micBtn.classList.remove('mic-idle');
+                document.getElementById('mic-text').textContent = '請用提示或打字';
+                return;
+            }
+
+            recognition = new SpeechRecognition();
+            recognition.lang = 'zh-HK';
+            recognition.interimResults = true;
+            recognition.maxAlternatives = 1;
+
+            let finalTranscript = '';
+
+            recognition.onstart = function() {
+                isRecording = true;
+                finalTranscript = '';
+                const micBtn = document.getElementById('mic-btn');
+                const micIcon = document.getElementById('mic-icon');
+                const micText = document.getElementById('mic-text');
+                const liveBox = document.getElementById('live-transcript-box');
+                const liveText = document.getElementById('live-transcript-text');
+
+                micBtn.classList.remove('mic-idle');
+                micBtn.classList.add('mic-recording');
+                micIcon.textContent = '👂';
+                micText.textContent = '聆聽中…';
+                
+                liveText.textContent = '請大聲說出你想勸說農夫的話……';
+                liveBox.classList.remove('hidden');
+            };
+
+            recognition.onresult = function(event) {
+                let interimTranscript = '';
+                for (let i = event.resultIndex; i < event.results.length; ++i) {
+                    if (event.results[i].isFinal) {
+                        finalTranscript += event.results[i][0].transcript;
+                    } else {
+                        interimTranscript += event.results[i][0].transcript;
+                    }
+                }
+                const displayStr = finalTranscript || interimTranscript;
+                if (displayStr) {
+                    document.getElementById('live-transcript-text').textContent = `「${displayStr}」`;
+                }
+            };
+
+            recognition.onerror = function(event) {
+                stopRecordingUI();
+                if (event.error === 'not-allowed') {
+                    showToast('⚠️ 請允許使用麥克風，或使用「勸說小提示」與打字輸入。');
+                    const chatForm = document.getElementById('chat-form');
+                    chatForm.classList.remove('hidden');
+                    chatForm.classList.add('flex');
+                } else if (event.error !== 'aborted') {
+                    showToast('😅 沒有聽清楚，請再按一次說話或使用「勸說小提示」！');
+                }
+            };
+
+            recognition.onend = function() {
+                stopRecordingUI();
+                const spokenText = finalTranscript.trim();
+                if (spokenText.length > 0) {
+                    submitStudentSpeech(spokenText);
+                }
+            };
+        }
+
+        function stopRecordingUI() {
+            isRecording = false;
+            const micBtn = document.getElementById('mic-btn');
+            const micIcon = document.getElementById('mic-icon');
+            const micText = document.getElementById('mic-text');
+            const liveBox = document.getElementById('live-transcript-box');
+
+            if (micBtn) {
+                micBtn.classList.remove('mic-recording');
+                micBtn.classList.add('mic-idle');
+                micIcon.textContent = '🎤';
+                micText.textContent = '按一下說話';
+            }
+            if (liveBox) {
+                liveBox.classList.add('hidden');
+            }
+        }
+
+        // 點擊大圓形麥克風按鈕
+        function toggleSpeechRecognition() {
+            if (isProcessing) return;
+            window.speechSynthesis.cancel();
+
+            if (!recognition) {
+                showToast('💡 當前瀏覽器不支援語音輸入，請點選「勸說小提示」或直接打字！');
+                const chatForm = document.getElementById('chat-form');
+                chatForm.classList.remove('hidden');
+                chatForm.classList.add('flex');
+                return;
+            }
+
+            if (isRecording) {
+                recognition.stop();
+            } else {
+                try {
+                    recognition.start();
+                } catch (e) {
+                    stopRecordingUI();
+                }
+            }
+        }
+
+        // 獎狀頁面：用語音說出小朋友名字
+        function recordStudentName() {
+            const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+            if (!SpeechRecognition) {
+                showToast('請直接點選名字框輸入你的名字！');
+                document.getElementById('student-name-input').focus();
+                return;
+            }
+            const nameRec = new SpeechRecognition();
+            nameRec.lang = 'zh-HK';
+            const btn = document.getElementById('name-mic-btn');
+            btn.textContent = '👂 請說名字…';
+            nameRec.onresult = function(event) {
+                const nameText = event.results[0][0].transcript.replace(/[。，！？]/g, '').trim();
+                if (nameText) {
+                    document.getElementById('student-name-input').value = nameText.slice(0, 10);
+                }
+            };
+            nameRec.onend = function() {
+                btn.innerHTML = '<span>🎤 說出名字</span>';
+            };
+            nameRec.onerror = function() {
+                btn.innerHTML = '<span>🎤 說出名字</span>';
+            };
+            nameRec.start();
+        }
+
+        // 切換隱藏式打字輸入框
+        function toggleKeyboardInput() {
+            const chatForm = document.getElementById('chat-form');
+            if (chatForm.classList.contains('hidden')) {
+                chatForm.classList.remove('hidden');
+                chatForm.classList.add('flex');
+                document.getElementById('user-input').focus();
+            } else {
+                chatForm.classList.add('hidden');
+                chatForm.classList.remove('flex');
+            }
+        }
+
+        // ==========================================
+        // 3. 介面彈窗與提示輔助
+        // ==========================================
+        function showToast(msg) {
+            const toast = document.getElementById('toast-box');
+            toast.textContent = msg;
+            toast.classList.remove('opacity-0');
+            setTimeout(() => {
+                toast.classList.add('opacity-0');
+            }, 3200);
+        }
+
+        function openStoryModal() {
+            const modal = document.getElementById('story-modal');
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+        }
+
+        function closeStoryModal() {
+            window.speechSynthesis.cancel();
+            const modal = document.getElementById('story-modal');
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+        }
+
+        function openHintModal() {
+            if (isProcessing) return;
+            const modal = document.getElementById('hint-modal');
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+        }
+
+        function closeHintModal() {
+            const modal = document.getElementById('hint-modal');
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+        }
+
+        // 點擊「勸說小提示」句子卡片：關閉彈窗、朗讀該句並直接送出給農夫
+        function selectHintCard(sentence) {
+            closeHintModal();
+            if (isRecording && recognition) {
+                recognition.stop();
+            }
+            if (autoTTSEnabled) {
+                speakText(sentence);
+            }
+            submitStudentSpeech(sentence);
+        }
+
+        // 彩帶歡呼特效
+        function launchConfetti() {
+            const colors = ['#f43f5e', '#f59e0b', '#10b981', '#3b82f6', '#ec4899', '#eab308'];
+            for (let i = 0; i < 55; i++) {
+                const confetti = document.createElement('div');
+                confetti.className = 'confetti-piece rounded-sm';
+                confetti.style.left = `${Math.random() * 100}vw`;
+                confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                confetti.style.animationDuration = `${2 + Math.random() * 2}s`;
+                confetti.style.animationDelay = `${Math.random() * 0.6}s`;
+                document.body.appendChild(confetti);
+                setTimeout(() => confetti.remove(), 4500);
+            }
+        }
+
+        // ==========================================
+        // 4. 四階段動態繪本 SVG 插畫與進度更新邏輯
+        // ==========================================
+        function triggerPenaltyVisual(delta, feedbackTag) {
+            const track = document.getElementById('progress-track');
+            const progressText = document.getElementById('progress-text');
+            const badge = document.getElementById('penalty-floating-badge');
+
+            // 進度條紅色震動提示
+            track.classList.remove('penalty-shake');
+            void track.offsetWidth; // 觸發重繪
+            track.classList.add('penalty-shake');
+
+            progressText.classList.remove('text-amber-900');
+            progressText.classList.add('text-red-600');
+
+            // 跳出醒目紅色扣分徽章
+            badge.textContent = feedbackTag || `${delta}% 農夫更不想工作了！`;
+            badge.classList.remove('hidden', 'penalty-badge-anim');
+            void badge.offsetWidth;
+            badge.classList.add('penalty-badge-anim');
+
+            setTimeout(() => {
+                track.classList.remove('penalty-shake');
+                progressText.classList.remove('text-red-600');
+                progressText.classList.add('text-amber-900');
+            }, 1200);
+        }
+
+        function updateSceneVisuals(score, aiMood, isPenalty = false) {
+            const progressBar = document.getElementById('progress-bar');
+            const progressText = document.getElementById('progress-text');
+            progressBar.style.width = `${score}%`;
+            progressText.textContent = `${score}%`;
+
+            // 表情元素
+            const faceStubborn = document.getElementById('face-stubborn');
+            const faceThinking = document.getElementById('face-thinking');
+            const faceSurprised = document.getElementById('face-surprised');
+            const faceConvinced = document.getElementById('face-convinced');
+
+            // 手臂、雙腳與場景元素
+            const armsHugging = document.getElementById('arms-hugging');
+            const armsScratching = document.getElementById('arms-scratching');
+            const armsSurprised = document.getElementById('arms-surprised');
+            const armsFarming = document.getElementById('arms-farming');
+            const legsCrossed = document.getElementById('legs-crossed');
+            const legsStanding = document.getElementById('legs-standing');
+            const farmerChar = document.getElementById('farmer-character');
+
+            const weedsGroup = document.getElementById('weeds-group');
+            const cropsGroup = document.getElementById('crops-group');
+            const spiderWeb = document.getElementById('spider-web');
+            const rabbitDaydream = document.getElementById('rabbit-daydream');
+            const daydreamQuestion = document.getElementById('daydream-question');
+            const daydreamHeart = document.getElementById('daydream-heart');
+            const moodIndicator = document.getElementById('mood-indicator');
+
+            // 重設隱藏所有表情手臂
+            [faceStubborn, faceThinking, faceSurprised, faceConvinced].forEach(el => el.style.display = 'none');
+            [armsHugging, armsScratching, armsSurprised, armsFarming].forEach(el => el.style.display = 'none');
+            daydreamHeart.style.display = 'none';
+
+            // 若發生扣分，農夫立刻退回更加得意偷懶的姿態
+            if (isPenalty) {
+                faceStubborn.style.display = 'block';
+                armsHugging.style.display = 'block';
+                legsCrossed.style.display = 'block';
+                legsStanding.style.display = 'none';
+                farmerChar.setAttribute('transform', 'translate(175, 130)');
+                weedsGroup.style.opacity = '1';
+                cropsGroup.style.opacity = '0';
+                spiderWeb.style.display = 'none';
+                rabbitDaydream.style.opacity = '1';
+                rabbitDaydream.setAttribute('transform', 'translate(-25, -12) scale(1.12)');
+                daydreamQuestion.style.display = 'none';
+                daydreamHeart.style.display = 'block';
+                moodIndicator.textContent = '😆 農夫：得意洋洋、更想偷懶了！';
+                moodIndicator.className = 'bg-red-100 text-red-900 px-4 py-1.5 rounded-full text-base sm:text-lg font-black shadow-sm border-2 border-red-400';
+                return;
+            }
+
+            moodIndicator.className = 'bg-amber-100 text-amber-950 px-4 py-1.5 rounded-full text-base sm:text-lg font-black shadow-sm border-2 border-amber-300';
+
+            // 根據進度百分比切換 4 個狀態：0%-29%、30%-59%、60%-99%、100%
+            if (score <= 29) {
+                // 0%–29%（固執偷懶）：抱臂翹腳靠在樹樁旁得意微笑，頭頂冒出「兔子快來」白日夢氣泡
+                faceStubborn.style.display = 'block';
+                armsHugging.style.display = 'block';
+                legsCrossed.style.display = 'block';
+                legsStanding.style.display = 'none';
+                farmerChar.setAttribute('transform', 'translate(175, 130)');
+                weedsGroup.style.opacity = '1';
+                cropsGroup.style.opacity = '0';
+                spiderWeb.style.display = 'none';
+                rabbitDaydream.style.opacity = '1';
+                rabbitDaydream.setAttribute('transform', 'scale(1)');
+                daydreamQuestion.style.display = 'none';
+                moodIndicator.textContent = '😎 農夫：得意微笑發白日夢';
+            } else if (score <= 59) {
+                // 30%–59%（半信半疑）：皺眉抓頭，表情猶豫，白日夢氣泡縮小並出現問號
+                faceThinking.style.display = 'block';
+                armsScratching.style.display = 'block';
+                legsCrossed.style.display = 'block';
+                legsStanding.style.display = 'none';
+                farmerChar.setAttribute('transform', 'translate(175, 130)');
+                weedsGroup.style.opacity = '0.9';
+                cropsGroup.style.opacity = '0.1';
+                spiderWeb.style.display = 'none';
+                rabbitDaydream.style.opacity = '0.85';
+                rabbitDaydream.setAttribute('transform', 'translate(55, 22) scale(0.82)');
+                daydreamQuestion.style.display = 'block';
+                moodIndicator.textContent = '🤔 農夫：皺眉抓頭、半信半疑……';
+            } else if (score <= 99) {
+                // 60%–99%（開始動搖）：站起身張大嘴巴驚訝地望向長滿野草的荒田，樹樁旁出現蜘蛛網
+                faceSurprised.style.display = 'block';
+                armsSurprised.style.display = 'block';
+                legsCrossed.style.display = 'none';
+                legsStanding.style.display = 'block';
+                farmerChar.setAttribute('transform', 'translate(158, 118)');
+                weedsGroup.style.opacity = '0.75';
+                cropsGroup.style.opacity = '0.25';
+                spiderWeb.style.display = 'block';
+                rabbitDaydream.style.opacity = '0';
+                moodIndicator.textContent = '😲 農夫：驚訝望向長滿野草的荒田！';
+            } else {
+                // 100%（徹底醒悟）：露出開朗笑容，重新拿起鋤頭走進田裡耕作，荒田長出綠油油禾苗與小花
+                faceConvinced.style.display = 'block';
+                armsFarming.style.display = 'block';
+                legsCrossed.style.display = 'none';
+                legsStanding.style.display = 'block';
+                farmerChar.setAttribute('transform', 'translate(125, 118)');
+                weedsGroup.style.opacity = '0';
+                cropsGroup.style.opacity = '1';
+                spiderWeb.style.display = 'none';
+                rabbitDaydream.style.opacity = '0';
+                moodIndicator.textContent = '😄 農夫：開心拿起鋤頭耕田啦！';
+            }
+        }
+
+        function updateKeypointsUI(userMsg, badgeText, scoreDelta) {
+            if (scoreDelta <= 0) return;
+            const combined = `${userMsg} ${badgeText || ''}`;
+            if (combined.includes('兔') || combined.includes('運氣') || combined.includes('偶然') || combined.includes('天天') || combined.includes('巧合')) {
+                unlockedKeypoints.chance = true;
+            }
+            if (combined.includes('田') || combined.includes('草') || combined.includes('餓') || combined.includes('飯') || combined.includes('糧食') || combined.includes('荒廢')) {
+                unlockedKeypoints.consequence = true;
+            }
+            if (combined.includes('努力') || combined.includes('耕') || combined.includes('收穫') || combined.includes('工作') || combined.includes('勤勞')) {
+                unlockedKeypoints.effort = true;
+            }
+
+            if (unlockedKeypoints.chance) {
+                document.getElementById('keypoint-1').className = 'py-2 px-1 rounded-xl bg-amber-100 border-2 border-amber-500 text-amber-950 font-black shadow-sm transition-all';
+            }
+            if (unlockedKeypoints.consequence) {
+                document.getElementById('keypoint-2').className = 'py-2 px-1 rounded-xl bg-orange-100 border-2 border-orange-500 text-orange-950 font-black shadow-sm transition-all';
+            }
+            if (unlockedKeypoints.effort) {
+                document.getElementById('keypoint-3').className = 'py-2 px-1 rounded-xl bg-emerald-100 border-2 border-emerald-500 text-emerald-950 font-black shadow-sm transition-all';
+            }
+        }
+
+        // ==========================================
+        // 5. 對話氣泡渲染函式（支援加分與扣分徽章）
+        // ==========================================
+        function appendStudentMessage(text) {
+            const chatContainer = document.getElementById('chat-container');
+            const msgDiv = document.createElement('div');
+            msgDiv.className = 'flex items-start justify-end gap-3';
+            msgDiv.innerHTML = `
+                <div class="flex flex-col items-end max-w-[85%]">
+                    <span class="text-base font-black text-emerald-800 mb-1 mr-1">我</span>
+                    <div class="relative bg-[#dcf5d6] border-2 border-[#9ed195] text-stone-800 p-4 rounded-2xl rounded-tr-none shadow-sm bubble-student text-xl sm:text-2xl font-bold leading-relaxed">
+                        ${escapeHTML(text)}
+                    </div>
+                </div>
+                <div class="w-12 h-12 sm:w-14 sm:h-14 rounded-full bg-emerald-500 text-white flex items-center justify-center font-black shrink-0 shadow border-2 border-emerald-200 text-2xl sm:text-3xl">
+                    🧒
+                </div>
+            `;
+            chatContainer.appendChild(msgDiv);
+            chatContainer.scrollTop = chatContainer.scrollHeight;
+        }
+
+        function appendFarmerMessage(replyText, scoreDelta, feedbackTag) {
+            const chatContainer = document.getElementById('chat-container');
+            const msgDiv = document.createElement('div');
+            msgDiv.className = 'flex items-start gap-3';
+
+            const safeSpeakArg = replyText.replace(/'/g, "\\'").replace(/"/g, '&quot;');
+
+            let badgesHTML = '';
+            if (scoreDelta !== 0 || feedbackTag) {
+                badgesHTML += `<div class="flex flex-wrap gap-2 mt-2.5 pt-2 border-t border-amber-300/60">`;
+                if (scoreDelta > 0) {
+                    badgesHTML += `<span class="text-sm sm:text-base font-black px-3 py-0.5 rounded-full bg-rose-100 text-rose-700 border border-rose-300">❤️ +${scoreDelta}%</span>`;
+                } else if (scoreDelta < 0) {
+                    badgesHTML += `<span class="text-sm sm:text-base font-black px-3 py-0.5 rounded-full bg-red-600 text-white border border-red-700 shadow-sm">⚠️ ${scoreDelta}%</span>`;
+                }
+                if (feedbackTag) {
+                    const tagClass = scoreDelta < 0 
+                        ? 'bg-red-100 text-red-800 border-red-300' 
+                        : (scoreDelta > 0 ? 'bg-emerald-100 text-emerald-800 border-emerald-300' : 'bg-amber-100 text-amber-900 border-amber-300');
+                    const tagIcon = scoreDelta < 0 ? '🚨' : (scoreDelta > 0 ? '⭐' : '💬');
+                    badgesHTML += `<span class="text-sm sm:text-base font-black px-3 py-0.5 rounded-full border ${tagClass}">${tagIcon} ${escapeHTML(feedbackTag)}</span>`;
+                }
+                badgesHTML += `</div>`;
+            }
+
+            msgDiv.innerHTML = `
+                <div class="w-12 h-12 sm:w-14 sm:h-14 rounded-full bg-amber-600 text-white flex items-center justify-center font-black shrink-0 shadow border-2 border-amber-200 text-2xl sm:text-3xl">
+                    👨‍🌾
+                </div>
+                <div class="flex flex-col max-w-[85%]">
+                    <div class="flex items-center gap-2 mb-1 ml-1">
+                        <span class="text-base font-black text-amber-900">農夫叔叔</span>
+                        <button type="button" onclick="speakText('${safeSpeakArg}')" class="px-3 py-1 bg-amber-200 hover:bg-amber-300 text-amber-950 rounded-full text-sm font-black flex items-center gap-1 shadow-sm transition active:scale-95">
+                            <span>再聽一次 🔊</span>
+                        </button>
+                    </div>
+                    <div class="relative bg-[#f6ebd3] border-2 border-[#d9c8a9] text-stone-800 p-4 rounded-2xl rounded-tl-none shadow-sm bubble-farmer text-xl sm:text-2xl font-bold leading-relaxed">
+                        <div>${escapeHTML(replyText)}</div>
+                        ${badgesHTML}
+                    </div>
+                </div>
+            `;
+            chatContainer.appendChild(msgDiv);
+            chatContainer.scrollTop = chatContainer.scrollHeight;
+        }
+
+        function appendLoadingBubble() {
+            const chatContainer = document.getElementById('chat-container');
+            const loadingDiv = document.createElement('div');
+            loadingDiv.id = 'loading-bubble';
+            loadingDiv.className = 'flex items-start gap-3';
+            loadingDiv.innerHTML = `
+                <div class="w-12 h-12 sm:w-14 sm:h-14 rounded-full bg-amber-600 text-white flex items-center justify-center font-black shrink-0 shadow border-2 border-amber-200 text-2xl sm:text-3xl">
+                    👨‍🌾
+                </div>
+                <div class="flex flex-col">
+                    <span class="text-base font-black text-amber-900 mb-1 ml-1">農夫叔叔</span>
+                    <div class="relative bg-[#f6ebd3] border-2 border-[#d9c8a9] text-amber-950 px-4 py-3 rounded-2xl rounded-tl-none shadow-sm bubble-farmer text-lg font-black flex items-center gap-2">
+                        <span>農夫叔叔正在思考你的話</span>
+                        <span class="animate-bounce text-2xl">💭</span>
+                    </div>
+                </div>
+            `;
+            chatContainer.appendChild(loadingDiv);
+            chatContainer.scrollTop = chatContainer.scrollHeight;
+        }
+
+        function removeLoadingBubble() {
+            const loadingDiv = document.getElementById('loading-bubble');
+            if (loadingDiv) loadingDiv.remove();
+        }
+
+        function escapeHTML(str) {
+            const div = document.createElement('div');
+            div.textContent = str;
+            return div.innerHTML;
+        }
+
+        // ==========================================
+        // 6. Gemini API 規範書面語雙向評分農夫角色扮演
+        // ==========================================
+        async function fetchFarmerResponse(userMessage) {
+            const apiKey = ""; 
+            const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3-flash-preview:generateContent?key=${apiKey}`;
+
+            const systemPrompt = `
+你現在是成語故事《守株待兔》中的「農夫叔叔」，正在與一位香港小學二年級（7至8歲）學生對話。
+【嚴格遵守規則】
+1. 農夫所有回應與評語標籤都必須使用規範標準的「繁體中文書面語」，絕不使用任何粵語口語字眼（嚴格禁止出現：嘅、咗、啲、唔、喺、咩、咁、乜、佢、係、呀、啦、㗎、點解、做嘢等粵語方言字）。
+2. 語氣生動童趣、淺顯易懂，適合小學二年級學生閱讀。
+3. 每次只說 1 至 2 句短句，總字數嚴格限制在 35 個中文字以內！
+4. 【雙向評分機制（目前說服力為 ${persuasionScore}%）】：
+   - **正向勸說（+15 到 +30 分）**：當學生勸說你回去耕田、指出兔子撞樹只是偶然運氣、指出不耕田會沒糧食或長雜草、或強調努力才有收穫時，給予 +15 至 +30 分，態度逐漸軟化。
+   - **扣分懲罰（-10 到 -20 分）**：當學生附和農夫偷懶（例如「我也覺得在樹下等很好」、「不用耕田真輕鬆」、「我們一起等兔子」）、鼓勵不勞而獲、或者說無關話題／胡言亂語（例如「今天天氣不錯」、「隨便亂打字」）時，必須扣分（scoreDelta 設為 -10 到 -20 之間的負整數）！農夫要得意洋洋地說：「哈哈，連你也覺得等兔子最輕鬆吧！我決定繼續睡覺等兔子！」或「你說的話跟種田沒關係，我還是繼續等兔子吧！」
+   - **普通問候（0 分）**：若學生僅說「你好」，scoreDelta 設為 0，農夫得意地邀請他一起在樹樁旁等兔子，引導他開始勸說。
+5. 根據加上本次分數後的總分（限制在 0 到 100 之間）決定 mood：
+   - 扣分或 0–29 分：stubborn
+   - 30–59 分：thinking
+   - 60–99 分：surprised
+   - 100 分：convinced（此時你要開心地說：「你說得太有道理了！我立刻拿起鋤頭回去耕田！」）
+`;
+
+            const contents = [
+                ...conversationHistory,
+                {
+                    role: "user",
+                    parts: [{ text: `目前說服力：${persuasionScore}%。小朋友說：「${userMessage}」` }]
+                }
+            ];
+
+            const payload = {
+                contents: contents,
+                systemInstruction: {
+                    parts: [{ text: systemPrompt }]
+                },
+                generationConfig: {
+                    responseMimeType: "application/json",
+                    responseSchema: {
+                        type: "OBJECT",
+                        properties: {
+                            reply: {
+                                type: "STRING",
+                                description: "農夫用規範標準繁體中文書面語回覆（限1至2句短句，嚴格35個字以內，絕無粵語方言字）"
+                            },
+                            scoreDelta: {
+                                type: "INTEGER",
+                                description: "說服力變化分數：正向勸說為 +15 到 +30；附和偷懶、鼓勵不勞而獲或無關內容為 -10 到 -20；普通問候為 0"
+                            },
+                            mood: {
+                                type: "STRING",
+                                enum: ["stubborn", "thinking", "surprised", "convinced"],
+                                description: "農夫當前表情狀態"
+                            },
+                            feedbackTag: {
+                                type: "STRING",
+                                description: "簡短書面語評語標籤（例如：'+25% 說得真有道理！' 或 '-15% 糟糕，農夫更想偷懶了！'）"
+                            }
+                        },
+                        required: ["reply", "scoreDelta", "mood", "feedbackTag"]
+                    }
+                }
+            };
+
+            const delays = [1000, 2000, 4000];
+            for (let attempt = 0; attempt <= delays.length; attempt++) {
+                try {
+                    const response = await fetch(apiUrl, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(payload)
+                    });
+
+                    if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+                    const result = await response.json();
+                    const text = result?.candidates?.[0]?.content?.parts?.[0]?.text;
+                    if (!text) throw new Error("Empty response");
+
+                    const parsed = JSON.parse(text);
+                    conversationHistory.push({ role: "user", parts: [{ text: userMessage }] });
+                    conversationHistory.push({ role: "model", parts: [{ text: parsed.reply }] });
+                    return parsed;
+                } catch (error) {
+                    if (attempt === delays.length) {
+                        return fallbackStandardFarmer(userMessage);
+                    }
+                    await new Promise(resolve => setTimeout(resolve, delays[attempt]));
+                }
+            }
+        }
+
+        // 本地標準書面語雙向評分備援邏輯（支援正向加分與附和／無關內容扣分）
+        function fallbackStandardFarmer(msg) {
+            const trimmed = msg.trim();
+
+            // 1. 偵測附和偷懶或鼓勵不勞而獲的關鍵詞 -> 扣分 (-15)
+            const lazyKeywords = ["繼續等", "不用種", "不用耕", "偷懶", "好主意", "一起等", "真輕鬆", "不要工作", "繼續睡", "等兔子好", "我也覺得"];
+            if (lazyKeywords.some(kw => trimmed.includes(kw))) {
+                return {
+                    reply: "哈哈，連你也覺得等兔子最輕鬆吧！我決定繼續睡覺等兔子！",
+                    scoreDelta: -15,
+                    mood: "stubborn",
+                    feedbackTag: "-15% 糟糕，農夫更想偷懶了！"
+                };
+            }
+
+            // 2. 偵測普通問候 -> 0 分引導
+            if (/^(你好|哈囉|嗨|早晨|老師好|農夫好|叔叔好)[！!。.]?$/.test(trimmed)) {
+                return {
+                    reply: "你好呀！快來和我一起坐在樹樁旁等兔子吧，多舒服！",
+                    scoreDelta: 0,
+                    mood: "stubborn",
+                    feedbackTag: "快試著勸說農夫吧！"
+                };
+            }
+
+            // 3. 偵測正向勸說關鍵詞 -> 加分 (+25 到 +30)
+            let delta = 0;
+            let tag = "";
+            let reply = "";
+
+            if (trimmed.includes("兔") || trimmed.includes("運氣") || trimmed.includes("天天") || trimmed.includes("偶然") || trimmed.includes("巧合")) {
+                delta = 30;
+                tag = "+30% 說得真有道理！";
+                reply = "哎呀，你說得對！兔子撞樹只是偶然的運氣，不會天天發生！";
+            } else if (trimmed.includes("田") || trimmed.includes("草") || trimmed.includes("餓") || trimmed.includes("飯") || trimmed.includes("糧食") || trimmed.includes("荒廢")) {
+                delta = 30;
+                tag = "+30% 提醒得很及時！";
+                reply = "糟了！田地長滿了野草，再不耕種就沒有糧食吃了！";
+            } else if (trimmed.includes("努力") || trimmed.includes("耕") || trimmed.includes("收穫") || trimmed.includes("工作") || trimmed.includes("勤勞") || trimmed.includes("種")) {
+                delta = 30;
+                tag = "+30% 懂得努力的重要！";
+                reply = "沒錯！一分耕耘，一分收穫，只有努力工作才會有收穫！";
+            } else {
+                // 4. 無關話題或胡言亂語 -> 扣分 (-15)
+                return {
+                    reply: "你說的話跟種田沒關係，我還是繼續坐在這裡等兔子吧！",
+                    scoreDelta: -15,
+                    mood: "stubborn",
+                    feedbackTag: "-15% 話題無關，農夫更想偷懶了！"
+                };
+            }
+
+            const nextScore = Math.min(100, Math.max(0, persuasionScore + delta));
+            let mood = "stubborn";
+            if (nextScore >= 100) {
+                mood = "convinced";
+                reply = "你說得太有道理了！謝謝你，我立刻拿起鋤頭回去耕田！";
+            } else if (nextScore >= 60) {
+                mood = "surprised";
+            } else if (nextScore >= 30) {
+                mood = "thinking";
+            }
+
+            return {
+                reply: reply,
+                scoreDelta: delta,
+                mood: mood,
+                feedbackTag: tag
+            };
+        }
+
+        // ==========================================
+        // 7. 送出對話與遊戲重置
+        // ==========================================
+        async function submitStudentSpeech(message) {
+            if (isProcessing || !message) return;
+
+            const inputEl = document.getElementById('user-input');
+            const sendBtn = document.getElementById('send-btn');
+
+            isProcessing = true;
+            inputEl.value = '';
+            inputEl.disabled = true;
+            sendBtn.disabled = true;
+
+            appendStudentMessage(message);
+            appendLoadingBubble();
+
+            const aiResult = await fetchFarmerResponse(message);
+            removeLoadingBubble();
+
+            // 限制加分在 +15..+30，扣分在 -10..-20，問候為 0
+            let delta = Number(aiResult.scoreDelta) || 0;
+            if (delta > 0) {
+                delta = Math.max(15, Math.min(30, delta));
+            } else if (delta < 0) {
+                delta = Math.min(-10, Math.max(-20, delta));
+            }
+
+            const isPenalty = delta < 0;
+            persuasionScore = Math.max(0, Math.min(100, persuasionScore + delta));
+
+            updateKeypointsUI(message, aiResult.feedbackTag, delta);
+            appendFarmerMessage(aiResult.reply, delta, aiResult.feedbackTag);
+
+            if (isPenalty) {
+                triggerPenaltyVisual(delta, aiResult.feedbackTag);
+            }
+            updateSceneVisuals(persuasionScore, aiResult.mood, isPenalty);
+
+            // 自動語音朗讀農夫的回覆
+            if (autoTTSEnabled) {
+                speakText(aiResult.reply);
+            }
+
+            isProcessing = false;
+            inputEl.disabled = false;
+            sendBtn.disabled = false;
+
+            if (persuasionScore >= 100) {
+                launchConfetti();
+                setTimeout(() => {
+                    const victoryModal = document.getElementById('victory-modal');
+                    victoryModal.classList.remove('hidden');
+                    victoryModal.classList.add('flex');
+                    if (autoTTSEnabled) {
+                        speakText('太棒了！你成功勸說農夫回去努力耕田，獲得小小勸說家獎狀！記住，做事不能只想著不勞而獲，要靠自己努力才會有收穫。');
+                    }
+                }, 2200);
+            }
+        }
+
+        function handleSendMessage(event) {
+            event.preventDefault();
+            const inputEl = document.getElementById('user-input');
+            const message = inputEl.value.trim();
+            if (message) {
+                submitStudentSpeech(message);
+            }
+        }
+
+        function resetGame() {
+            window.speechSynthesis.cancel();
+            persuasionScore = 0;
+            conversationHistory = [];
+            unlockedKeypoints = { chance: false, consequence: false, effort: false };
+            
+            ['keypoint-1', 'keypoint-2', 'keypoint-3'].forEach(id => {
+                document.getElementById(id).className = 'py-2 px-1 rounded-xl bg-white border-2 border-amber-300 text-stone-500 transition-all';
+            });
+
+            const initialQuote = '昨天有隻兔子撞死在樹樁上，我天天在這裡等兔子多輕鬆呀！';
+            const chatContainer = document.getElementById('chat-container');
+            chatContainer.innerHTML = `
+                <div class="flex items-start gap-3">
+                    <div class="w-12 h-12 sm:w-14 sm:h-14 rounded-full bg-amber-600 text-white flex items-center justify-center font-black shrink-0 shadow border-2 border-amber-200 text-2xl sm:text-3xl">
+                        👨‍🌾
+                    </div>
+                    <div class="flex flex-col max-w-[85%]">
+                        <div class="flex items-center gap-2 mb-1 ml-1">
+                            <span class="text-base font-black text-amber-900">農夫叔叔</span>
+                            <button type="button" onclick="speakText('${initialQuote}')" class="px-3 py-1 bg-amber-200 hover:bg-amber-300 text-amber-950 rounded-full text-sm font-black flex items-center gap-1 shadow-sm transition active:scale-95">
+                                <span>再聽一次 🔊</span>
+                            </button>
+                        </div>
+                        <div class="relative bg-[#f6ebd3] border-2 border-[#d9c8a9] text-stone-800 p-4 rounded-2xl rounded-tl-none shadow-sm bubble-farmer text-xl sm:text-2xl font-bold leading-relaxed">
+                            ${initialQuote}
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            updateSceneVisuals(0, 'stubborn');
+            const victoryModal = document.getElementById('victory-modal');
+            victoryModal.classList.add('hidden');
+            victoryModal.classList.remove('flex');
+            
+            if (autoTTSEnabled) {
+                speakText(initialQuote);
+            }
+        }
+    </script>
+</body>
+</html>
